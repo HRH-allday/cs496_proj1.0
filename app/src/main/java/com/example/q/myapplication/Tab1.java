@@ -1,8 +1,11 @@
 package com.example.q.myapplication;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +25,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static com.example.q.myapplication.R.id.mName;
 
 
 /**
@@ -94,7 +100,7 @@ public class Tab1 extends Fragment {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.item, null);
 
-                holder.mName = (TextView) convertView.findViewById(R.id.mName);
+                holder.mName = (TextView) convertView.findViewById(mName);
                 holder.mNumber = (TextView) convertView.findViewById(R.id.mNumber);
 
                 convertView.setTag(holder);
@@ -152,6 +158,38 @@ public class Tab1 extends Fragment {
         mListView = (ListView) view.findViewById(R.id.mList);
         mAdapter = new ListViewAdapter(getActivity());
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ListData who = (ListData) parent.getAdapter().getItem(position);
+                final String wname = who.mName;
+                final String wnum = who.mNumber;
+
+                AlertDialog.Builder dlg1 = new AlertDialog.Builder(getActivity());
+                dlg1.setMessage("Call / Text").setCancelable(true).setPositiveButton("Call",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + wnum));
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton("Text",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                intent.setData(Uri.parse("smsto:" + wnum));
+                                startActivity(intent);
+                            }
+                        });
+
+
+                dlg1.setTitle(wname);
+                dlg1.show();
+            }
+        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
