@@ -5,9 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import static com.example.q.myapplication.R.drawable.c;
 
 /**
  * Created by yk 12/26/2016
@@ -19,13 +22,13 @@ public class Tab2 extends Fragment {
 
     private GridView mGridView = null;
     private GridAdapter mGridAdapter = null;
+    private int mImageList[] = {
+            R.drawable.a,R.drawable.b,R.drawable.j, c, c,R.drawable.e,R.drawable.j,R.drawable.f, c,R.drawable.e,R.drawable.j,R.drawable.h, c,R.drawable.e,R.drawable.j,R.drawable.i, c,R.drawable.e,R.drawable.j,R.drawable.b, c,R.drawable.e,R.drawable.j,R.drawable.i,
+            c,R.drawable.e,R.drawable.j,R.drawable.d, c,R.drawable.e,R.drawable.j,R.drawable.f, c,R.drawable.e,R.drawable.j,R.drawable.h, c,R.drawable.e,R.drawable.j,R.drawable.i, c,R.drawable.e,R.drawable.j,R.drawable.b, c,R.drawable.e,R.drawable.j,R.drawable.i,
+    };
 
     private class GridAdapter extends BaseAdapter {
         private Context mContext = null;
-        private int mImageList[] = {
-                R.drawable.a,R.drawable.b,R.drawable.j,R.drawable.c,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.f,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.h,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.i,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.b,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.i,
-                R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.d,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.f,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.h,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.i,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.b,R.drawable.c,R.drawable.e,R.drawable.j,R.drawable.i,
-        };
 
         public GridAdapter(Context mContext){
             super();
@@ -76,6 +79,22 @@ public class Tab2 extends Fragment {
         mGridAdapter = new GridAdapter(getActivity());
 
         mGridView.setAdapter(mGridAdapter);
+
+        final ImageView imgzoom = (ImageView) view.findViewById(R.id.imageZoom);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                imgzoom.setImageResource(mImageList[position]);
+                imgzoom.setVisibility(View.VISIBLE);
+                imgzoom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imgzoom.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+        });
 
         return view;
     }
