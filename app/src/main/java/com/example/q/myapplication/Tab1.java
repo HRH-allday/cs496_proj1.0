@@ -41,6 +41,8 @@ public class Tab1 extends Fragment {
     private ListView mListView = null;
     private ListViewAdapter mAdapter = null;
 
+    private View view;
+
     ContentResolver contentResolver;
 
     private class ViewHolder {
@@ -138,11 +140,23 @@ public class Tab1 extends Fragment {
                 contact.mName = name;
                 contact.mNumber = number;
 
-                mAdapter.addItem(contact);
+                int br = 0;
+
+                for(int i=0 ; i<mAdapter.getCount() ; i++ ){
+                    ListData l = (ListData) mAdapter.getItem(i);
+                    if(l.mName.equals(name)){
+                       br = 1;
+                        break;
+                    }
+
+                }
+                if(br == 0)
+                    mAdapter.addItem(contact);
 
             } while (cursor1.moveToNext());
         }
         cursor1.close();
+        mAdapter.notifyDataSetChanged();
     }
     //Overriden method onCreateView
     @Override
@@ -152,7 +166,7 @@ public class Tab1 extends Fragment {
 
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
-        View view = inflater.inflate(R.layout.tab1, container, false);
+        view = inflater.inflate(R.layout.tab1, container, false);
 
 
         mListView = (ListView) view.findViewById(R.id.mList);
@@ -197,6 +211,12 @@ public class Tab1 extends Fragment {
             addcontact();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addcontact();
     }
 
     @Override
