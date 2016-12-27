@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
+        tabLayout.addTab(tabLayout.newTab().setText("A"));
+        tabLayout.addTab(tabLayout.newTab().setText("B"));
+        tabLayout.addTab(tabLayout.newTab().setText("C"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.addOnTabSelectedListener(this);
+
+        //Change tab indicator when swipe
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     @Override
