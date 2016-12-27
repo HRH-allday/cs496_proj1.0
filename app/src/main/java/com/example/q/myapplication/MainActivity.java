@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
 
+
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
     //This is our tablayout
     private TabLayout tabLayout;
 
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         //Adding toolbar to the activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         //Change tab indicator when swipe
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
+
+
+
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {

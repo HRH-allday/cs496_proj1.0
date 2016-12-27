@@ -1,11 +1,15 @@
 package com.example.q.myapplication;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,19 +111,7 @@ public class Tab1 extends Fragment {
             return convertView;
         }
     }
-    //Overriden method onCreateView
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        //Returning the layout file after inflating
-        //Change R.layout.tab1 in you classes
-        View view = inflater.inflate(R.layout.tab1, container, false);
-
-        mListView = (ListView) view.findViewById(R.id.mList);
-        mAdapter = new ListViewAdapter(getActivity());
-        mListView.setAdapter(mAdapter);
-
-
+    public void addcontact(){
         contentResolver = getActivity().getContentResolver();
 
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -144,7 +137,40 @@ public class Tab1 extends Fragment {
             } while (cursor1.moveToNext());
         }
         cursor1.close();
+    }
+    //Overriden method onCreateView
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+
+        //Returning the layout file after inflating
+        //Change R.layout.tab1 in you classes
+        View view = inflater.inflate(R.layout.tab1, container, false);
+
+
+        mListView = (ListView) view.findViewById(R.id.mList);
+        mAdapter = new ListViewAdapter(getActivity());
+        mListView.setAdapter(mAdapter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        else
+            addcontact();
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                addcontact();
+            } else {
+                Toast.makeText(getActivity(), "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
