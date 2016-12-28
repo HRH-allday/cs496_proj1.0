@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 
 /**
@@ -32,12 +33,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insert(String create_at, String work) {
+    public int insert(String create_at, String work) {
         // 읽고 쓰기가 가능하게 DB 열기
         SQLiteDatabase db = getWritableDatabase();
         // DB에 입력한 값으로 행 추가
-        db.execSQL("INSERT INTO WORKLIST VALUES(null, '" + work + "', " + create_at + "');");
+        db.execSQL("INSERT INTO WORKLIST VALUES(null, '" + work + "', '" + create_at + "');");
+        int num = db.rawQuery("SELECT * FROM WORKLIST", null).getCount();
         db.close();
+        return num;
     }
 
     public void update(String work) {
@@ -47,23 +50,27 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void delete(String work) {
+    public void delete(ListData2 work) {
         SQLiteDatabase db = getWritableDatabase();
         // 입력한 항목과 일치하는 행 삭제
-        db.execSQL("DELETE FROM WORKLIST WHERE item='" + work + "';");
+        db.execSQL("DELETE FROM WORKLIST WHERE _id='" + work.rowid + "';");
         db.close();
     }
 
-    public ArrayList<String> getResult(String create_at) {
+
+    public ArrayList<ListData2> getResult(String create_at) {
         // 읽기가 가능하게 DB 열기
         SQLiteDatabase db = getReadableDatabase();
         String result = "";
-        ArrayList<String> results = new ArrayList<String>();
+        ArrayList<ListData2> results = new ArrayList<ListData2>();
 
         // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
         Cursor cursor = db.rawQuery("SELECT * FROM WORKLIST WHERE create_at='" + create_at + "';", null);
         while (cursor.moveToNext()) {
-            results.add(cursor.getString(1));
+            ListData2 res = new ListData2();
+            res.rowid = cursor.getInt(0);
+            res.word = cursor.getString(1);
+            results.add(res);
         }
 
         return results;

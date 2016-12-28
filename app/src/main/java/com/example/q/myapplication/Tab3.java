@@ -35,6 +35,7 @@ public class Tab3 extends Fragment {
     Calendar dateTime = GregorianCalendar.getInstance();
     private TextView text;
     private Button btn_date;
+    private Button b;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 
     private DBHelper dbHelper;
@@ -74,9 +75,11 @@ public class Tab3 extends Fragment {
 
         public void addItem(ListData2 addInfo){
             mListData.add(addInfo);
+            Log.i("length", mListData.size()+"");
         }
 
         public void remove(int position){
+            dbHelper.delete(mListData.get(position));
             mListData.remove(position);
             dataChange();
         }
@@ -115,16 +118,40 @@ public class Tab3 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.tab3, container, false);
+        final View view = inflater.inflate(R.layout.tab3, container, false);
+        dateTime = Calendar.getInstance();
 
         mListView = (ListView) view.findViewById(mList);
         mAdapter = new ListViewAdapter(getActivity());
         mListView.setAdapter(mAdapter);
-
         dbHelper = new DBHelper(getActivity().getApplicationContext(), "WorkList.db", null, 1);
 
-        btn_date = (Button) view.findViewById(R.id.btn_datePicker);
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(mListView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
 
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    Log.i("pos",position+"");
+                                    mAdapter.remove(position);
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
+        mListView.setOnTouchListener(touchListener);
+        mListView.setOnScrollListener(touchListener.makeScrollListener());
+
+
+
+
+        btn_date = (Button) view.findViewById(R.id.btn_datePicker);
+        day = ""+ dateTime.get(Calendar.YEAR) + "-" + dateTime.get(Calendar.MONTH) + "-" + dateTime.get(Calendar.DATE);
+        btn_date.setText(day);
         btn_date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -132,6 +159,14 @@ public class Tab3 extends Fragment {
             }
         });
 
+        b = (Button) view.findViewById(R.id.send);
+
+        b.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sendMessage(view);
+            }
+        });
         //c1.set(mDate.get(0), mDate.get(1), mDate.get(2));
 
         showWorks();
@@ -141,12 +176,12 @@ public class Tab3 extends Fragment {
 
     }
     public void showWorks(){
-        ArrayList<String> mWorks = dbHelper.getResult(day);
-        for(String w : mWorks){
-            ListData2 n = new ListData2();
-            n.word = w;
-            mAdapter.addItem(n);
+        ArrayList<ListData2> mWorks = dbHelper.getResult(day);
+        Log.i("date2",day+"a");
+        for(ListData2 w : mWorks){
+            mAdapter.addItem(w);
         }
+        mAdapter.notifyDataSetChanged();
 
     }
     private void updateDate(){
@@ -161,7 +196,7 @@ public class Tab3 extends Fragment {
             dateTime.set(Calendar.MONTH, monthOfYear);
             Log.i("month",""+monthOfYear);
             dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            day = ""+ year + "-" + monthOfYear + "-" + dayOfMonth;
+            day = ""+ year + "-" + (monthOfYear+1) + "-" + dayOfMonth;
             Log.i("date",day);
             btn_date.setText(day);
             mAdapter.resetList();
@@ -173,13 +208,14 @@ public class Tab3 extends Fragment {
     public void sendMessage(View view) {
         EditText editText = (EditText) view.findViewById(R.id.edit_message);
         String message = editText.getText().toString();
-        ListData2 newword = new ListData2();
+        ListData2 newWord = new ListData2();
 
-        newword.word = message;
+        newWord.word = message;
 
-        dbHelper.insert(message, day);
 
-        mAdapter.addItem(newword);
+        newWord.rowid = dbHelper.insert(day, message);
+
+        mAdapter.addItem(newWord);
 
         mAdapter.notifyDataSetChanged();
 

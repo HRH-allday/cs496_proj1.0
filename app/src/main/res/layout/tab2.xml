@@ -9,15 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnWidth="100dp"
-        android:horizontalSpacing="0dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp" />
+        android:horizontalSpacing="3dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="3dp" />
 
     <ImageView
         android:id="@+id/imageZoom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

@@ -7,4 +7,6 @@ package com.example.q.myapplication;
 public class ListData2 {
 
     public String word;
+
+    public int rowid;
 }
