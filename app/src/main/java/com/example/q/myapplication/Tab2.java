@@ -50,15 +50,7 @@ public class Tab2 extends Fragment {
             }
         });
 
-        mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), gallery.class);
-                intent.putExtra("Name", mGridAdapter.getItemId(position));
-                getActivity().startActivity(intent);
-                return true;
-            }
-        });
+
 
 
         mGridView.setAdapter(mGridAdapter);

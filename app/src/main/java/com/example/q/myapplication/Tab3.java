@@ -150,7 +150,7 @@ public class Tab3 extends Fragment {
 
 
         btn_date = (Button) view.findViewById(R.id.btn_datePicker);
-        day = ""+ dateTime.get(Calendar.YEAR) + "-" + dateTime.get(Calendar.MONTH) + "-" + dateTime.get(Calendar.DATE);
+        day = ""+ dateTime.get(Calendar.YEAR) + "-" + (dateTime.get(Calendar.MONTH)+1) + "-" + dateTime.get(Calendar.DATE);
         btn_date.setText(day);
         btn_date.setOnClickListener(new View.OnClickListener(){
             @Override
