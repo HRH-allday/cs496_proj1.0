@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static android.os.Build.VERSION_CODES.M;
 import static com.example.q.myapplication.R.id.mName;
 
 
@@ -173,6 +174,9 @@ public class Tab1 extends Fragment {
         mAdapter = new ListViewAdapter(getActivity());
         mListView.setAdapter(mAdapter);
 
+
+
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -205,10 +209,7 @@ public class Tab1 extends Fragment {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-        else
-            addcontact();
+
 
         return view;
     }
@@ -216,7 +217,11 @@ public class Tab1 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        addcontact();
+        if (Build.VERSION.SDK_INT >= M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        }else{
+            addcontact();
+        }
     }
 
     @Override
