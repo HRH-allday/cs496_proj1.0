@@ -10,6 +10,10 @@
           <option name="url" value="git@github.com:HRH-allday/cs496_proj1.0.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/ashe-sparcs/MadCamp02" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="C:\Users\q\AndroidStudioProjects" />
