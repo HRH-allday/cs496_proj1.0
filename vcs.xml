@@ -18,6 +18,10 @@
           <option name="url" value="https://github.com/ashe-sparcs/MadCamp02_server" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/ashe-sparcs/MadCamp02.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="C:\Users\q\AndroidStudioProjects" />
